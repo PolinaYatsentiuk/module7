@@ -48,8 +48,8 @@ class Record:
     def find_phone(self,phone_number):
         return phone_number if phone_number in [str(p) for p in self.phones] else None
 
-    def add_birthday(self, value):
-        self.birthday = Birthday(value)
+    def add_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
   
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(str(p) for p in self.phones)}"
@@ -95,13 +95,16 @@ def birthdays(args, book):
     else:
         return "\n".join(f"{name}: {birthday}" for name, birthday in upcoming_birthdays)
 
-def add_contact(args, book):
-    try:
-        name, phone = args
-        book[name] = phone
-        return "Contact added."
-    except:
-        return "Not all details"
+def add_contact(args, contacts):
+    if len(args) != 2:
+        return "Error: Invalid number of arguments. Use 'add [name] [phone number]'."
+    
+    name, phone = args
+    record = Record(name)
+    record.add_phone(phone)
+
+    contacts.add_record(record)
+    return f"Contact {name} added with phone number {phone}."
 
 def change_contact(args, book):
     try:
